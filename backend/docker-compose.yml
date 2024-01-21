@@ -1,18 +1,18 @@
 version: '3.8'
 
 services:
-  postgres:
-    container_name: postgres
-    image: postgres:latest
+  db:
+    image: postgres
+    container_name: local_pgdb
     restart: always
-    environment:
-      POSTGRES_DB: ${POSTGRES_DATABASE}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - '5433:5433'
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DATABASE} #postgres
+      POSTGRES_USER: ${POSTGRES_USER} #postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} #pass12345
     volumes:
-      - ./pgdata/data:/var/lib/postgresql/data
+      - local_pgdata:/var/lib/postgresql/data
 
   nestjs:
     build:
@@ -21,4 +21,7 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - postgres
+      - db
+
+volumes:
+  local_pgdata:

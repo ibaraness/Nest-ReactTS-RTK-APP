@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres
+    container_name: local_pgdb
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DATABASE} #postgres
+      POSTGRES_USER: ${POSTGRES_USER} #postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} #pass12345
+    volumes:
+      - local_pgdata:/var/lib/postgresql/data
+
+  nestjs:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      POSTGRES_HOST : ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_DATABASE: ${POSTGRES_DATABASE} #postgres
+      POSTGRES_USER: ${POSTGRES_USER} #postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} #pass12345
+      PORT: ${PORT}
+      MODE: ${MODE}
+      RUN_MIGRATIONS: ${RUN_MIGRATIONS}
+    depends_on:
+      - db
+
+  reactjs:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+
+volumes:
+  local_pgdata:
+
+  

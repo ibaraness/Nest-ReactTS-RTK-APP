@@ -31,11 +31,11 @@ class ConfigService {
     public getTypeOrmConfig(): TypeOrmModuleOptions {
         return {
             type: 'postgres',
-            host: this.getValue('POSTGRES_HOST') || 'localhost',
-            port: parseInt(this.getValue('POSTGRES_PORT'), 10) || 5433,
-            username: this.getValue('POSTGRES_USER'),
-            password: this.getValue('POSTGRES_PASSWORD'),
-            database: this.getValue('POSTGRES_DATABASE'),
+            host: this.getValue('POSTGRES_HOST') || 'localhost', //"db"
+            port: parseInt(this.getValue('POSTGRES_PORT'), 10) || 5432, //5432
+            username: this.getValue('POSTGRES_USER'), //'postgres'
+            password: this.getValue('POSTGRES_PASSWORD'), //'pass12345'
+            database: this.getValue('POSTGRES_DATABASE'), //'postgres'
             autoLoadEntities: true,
             ssl: this.isProduction(),
             synchronize: !this.isProduction(),

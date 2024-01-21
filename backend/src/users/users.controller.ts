@@ -11,15 +11,7 @@ export class UsersController {
     @Get()
     @ExecutionTime()
     async getAll(): Promise<any> {
-        return lastValueFrom(this.userService.getAllUsers()
-            .pipe(
-                map(users => [...users, {
-                    "id": 11,
-                    "name": "Idan Baraness",
-                    "email": "idan.sad@karina.biz",
-                    "companyName": "Hoeger LLC"
-                }]),
-            ))
+        return lastValueFrom(this.userService.getAllUsers())
     }
 
     @Get(':id')
