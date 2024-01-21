@@ -8,12 +8,14 @@ interface UsersUIState {
     selectedUserId: number | null;
     pageNum: number;
     rowsPerPage: number;
+    searchTerm: string;
 }
 
 const initialState: UsersUIState = {
     selectedUserId: null,
     pageNum: 0,
-    rowsPerPage: 5
+    rowsPerPage: 5,
+    searchTerm: ''
 }
 
 // Creating a state slice for the user UI. Apart from fetching and storing the user list, 
@@ -31,6 +33,9 @@ export const usersUISlice = createSlice({
         },
         setRowsPerPage: (state, action: PayloadAction<number>) => {
             state.rowsPerPage = action.payload;
+        },
+        setSearchTerm: (state, action: PayloadAction<string>) => {
+            state.searchTerm = action.payload;
         }
     }
 });
@@ -39,10 +44,21 @@ export const usersUISlice = createSlice({
 export const selectPageNum = (state: RootState) => state.usersUI.pageNum;
 export const selectRowsPerPage = (state: RootState) => state.usersUI.rowsPerPage;
 export const selectSelectedUserId = (state: RootState) => state.usersUI.selectedUserId;
+export const selectUsersSearchTerm = (state: RootState) => state.usersUI.searchTerm;
+
+export const selectSearchResult = createSelector(
+    [selectAllUsers,
+        (state: RootState) => state.usersUI.searchTerm],
+    (users, term) => {
+        return term ? users.filter(user =>
+            user.name.toLowerCase().search(term.toLowerCase()) === 0)
+            : users
+    }
+)
 
 // Create a cached selector that returns a list of visible users objects (for the MUI table), 
 export const selectVisibleRows = createSelector(
-    [selectAllUsers,
+    [selectSearchResult,
         selectPageNum,
         selectRowsPerPage],
     (users, pageNum, rowsPerPage) => {
@@ -55,7 +71,7 @@ export const selectVisibleRows = createSelector(
 );
 
 // Export relevant actions for users UI
-export const { setRowsPerPage, setSelectedUserId, setPageNum } = usersUISlice.actions;
+export const { setRowsPerPage, setSelectedUserId, setPageNum, setSearchTerm } = usersUISlice.actions;
 
 // Export usersUI reducer to the store
 export default usersUISlice.reducer;  

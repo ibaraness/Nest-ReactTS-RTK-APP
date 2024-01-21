@@ -27,6 +27,7 @@ import UsersTableLoadingRow from "./UsersTableLoadingRow";
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { User } from "../../features/users/usersSlice";
 import { isErrorWithMessage, isFetchBaseQueryError } from '../../services/helpers';
+import UsersSearchBar from './UsersSearchBar';
 
 const UsersTable = () => {
 
@@ -37,8 +38,8 @@ const UsersTable = () => {
 
     let errorMessage = '';
 
-    if(isError) {
-        if(isFetchBaseQueryError(error) && isErrorWithMessage(error)){
+    if (isError) {
+        if (isFetchBaseQueryError(error) && isErrorWithMessage(error)) {
             errorMessage = error.message;
         }
     }
@@ -82,9 +83,11 @@ const UsersTable = () => {
             {/* Display error alert message on error laoding users */}
             {
                 isError && <Box sx={{ px: 2 }}>
-                    <Alert severity="error">{errorMessage  || "Unknown error, please try again later"}</Alert>
+                    <Alert severity="error">{errorMessage || "Unknown error, please try again later"}</Alert>
                 </Box>
             }
+            <UsersSearchBar></UsersSearchBar>
+
             <TableContainer>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
