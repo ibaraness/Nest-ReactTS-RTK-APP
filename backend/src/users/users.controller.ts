@@ -1,6 +1,6 @@
-import { Controller, Get, HttpException, HttpStatus, Param } from "@nestjs/common";
+import { Controller, Get, Param } from "@nestjs/common";
 import { UsersService } from "./users.service";
-import { delay, lastValueFrom, map } from "rxjs";
+import { lastValueFrom } from "rxjs";
 import { ExecutionTime } from "./../common/decorators/execution-time.decorator";
 
 @Controller('users')
