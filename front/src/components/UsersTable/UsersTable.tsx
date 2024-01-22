@@ -26,7 +26,7 @@ import BarTitle from '../shared/BarTitle';
 import UsersTableLoadingRow from "./UsersTableLoadingRow";
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { User } from "../../features/users/usersSlice";
-import { isErrorWithMessage, isFetchBaseQueryError } from '../../services/helpers';
+import { getErrorMessage } from '../../services/helpers';
 import UsersSearchBar from './UsersSearchBar';
 
 const UsersTable = () => {
@@ -36,13 +36,8 @@ const UsersTable = () => {
     const { isLoading, isError, error } = useGetUsersQuery(undefined);
     const dispatch = useAppDispatch();
 
-    let errorMessage = '';
-
-    if (isError) {
-        if (isFetchBaseQueryError(error) && isErrorWithMessage(error)) {
-            errorMessage = error.message;
-        }
-    }
+    // Get error message from the error object, or returns a default error message
+    const errorMessage = isError && getErrorMessage(error);
 
     // Loading appropriate state segments
     const selectedUserId: number | null = useAppSelector(selectSelectedUserId);
@@ -83,7 +78,7 @@ const UsersTable = () => {
             {/* Display error alert message on error laoding users */}
             {
                 isError && <Box sx={{ px: 2 }}>
-                    <Alert severity="error">{errorMessage || "Unknown error, please try again later"}</Alert>
+                    <Alert severity="error">{errorMessage}</Alert>
                 </Box>
             }
             <UsersSearchBar></UsersSearchBar>

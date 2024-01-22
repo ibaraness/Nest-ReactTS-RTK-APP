@@ -1,4 +1,6 @@
+import { SerializedError } from '@reduxjs/toolkit';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
+import { AppConfig } from '../config/config';
 
 /**
  * Type predicate to narrow an unknown error to `FetchBaseQueryError`
@@ -21,4 +23,13 @@ export function isErrorWithMessage(
     'message' in error &&
     typeof (error as any).message === 'string'
   )
+}
+
+export function getErrorMessage(
+  error: unknown, 
+  defaultMessage = AppConfig.strings.errors.default): string {
+  if (isFetchBaseQueryError(error) && isErrorWithMessage(error)) {
+    return error.message;
+  }
+  return defaultMessage;
 }

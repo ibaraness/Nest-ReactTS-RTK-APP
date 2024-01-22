@@ -6,7 +6,8 @@ import { selectSelectedUserId } from "../../features/users/usersUISlice";
 import { selectUserById } from "../../features/users/usersSlice";
 import { useAddNewPostMutation } from "../../features/posts/postsSlice";
 import { useAppSelector } from "../../app/hooks";
-import { isErrorWithMessage, isFetchBaseQueryError } from "../../services/helpers";
+import { getErrorMessage } from "../../services/helpers";
+import { AppConfig } from "../../config/config";
 
 const NewPost = () => {
 
@@ -19,13 +20,10 @@ const NewPost = () => {
 
     const [addNewPost, { isLoading, isError, error }] = useAddNewPostMutation();
 
-    let errorMessage = '';
+    // Get error message from the error object or returns a default error message
+    const errorMessage = isError && getErrorMessage(error);
 
-    if (isError) {
-        if (isFetchBaseQueryError(error) && isErrorWithMessage(error)) {
-            errorMessage = error.message;
-        }
-    }
+    const successfulPostCreationMessage = AppConfig.strings.newPost.successfulCreationMessage;
 
     const dispatch = useDispatch();
 
@@ -70,7 +68,7 @@ const NewPost = () => {
                     variant="filled"
                     sx={{ width: '100%' }}
                 >
-                    Post was successfully saved!
+                    {successfulPostCreationMessage}
                 </Alert>
             </Snackbar>
 
@@ -81,7 +79,7 @@ const NewPost = () => {
             }
             {
                 isError && <Box sx={{ px: 2 }}>
-                    <Alert severity="error">{errorMessage || "Unknown error, please try again later"}</Alert>
+                    <Alert severity="error">{ errorMessage }</Alert>
                 </Box>
             }
             <Grid container>
